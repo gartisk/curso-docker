@@ -44,5 +44,62 @@ docker image inspect --format="{{index .Config.Labels \"maintainer\"}}" ex-build
     # novo container debian irá ler o log gerado no container anterior
     docker container run -it --volumes-from=python-server debian cat /log/http-server.log
 ```
-*É necesário mapear o volume para que o diretorio /app aponte para a pasta build-dev que está na máquina host*
+*É necessário mapear o volume para que o diretorio /app aponte para a pasta build-dev que está na máquina host*
 
+6|44
+Apresentados 3 tipos de rede: none, bridge e host.
+
+6|45 Rede Tipo Bridge
+```sh
+docker container run --rm alpine ash -c "ifconfig"
+docker container run --rm --net none alpine ash -c "ifconfig"
+
+docker network inspect bridge
+
+# teste comunicação entre containers em modo bridge
+docker container run -d name container1 alpine sleep 1000
+docker container exec -it container1 ifconfig
+
+docker container run -d name container1 alpine sleep 1000
+docker container exec -it container2 ifconfig
+
+# veja que é possivel pingar o outro container
+docker container exec -it container1 ping 172.17.0.3
+
+#assim como é possivel pingar um site qualquer
+docker container exec -it container1 ping www.google.com
+
+# ----------------------
+
+# criação de uma nova rede
+docker network create --driver bridge rede_nova
+
+docker container run -d --name container3 --net rede_nova alpine sleep 1000
+docker container exec -it container3 ifconfig
+
+# veja que nesse momento não há conectividade entre as diferentes redes.
+docker container exec -it container3 ping 172.17.0.2
+
+# para permitir que o container3 se conecte tambéma a rede bridge
+docker network connect bridge container3
+
+# como pode observar uma nova interface eth1 com a rede bridge é criada.
+docker container exec -it container3 ifconfig
+
+# veja que é possivel agora pingar a rede bridge
+docker container exec -it container3 ping 172.17.0.2
+
+# para desativar a conexao do container com a rede bridge
+docker network disconnect bridge container3
+
+# veja que agora só é mantida a interface eth0
+docker container exec -it container3 ifconfig
+```
+
+6|46
+```sh
+docker container run -d --name container4 --net host alpine sleep 1000
+
+# veja o container fica mais exposto e todas as interfaces do host são compartilhadas com a maquina.
+docker container exec -it container4 ifconfig
+```
