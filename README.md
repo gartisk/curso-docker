@@ -25,3 +25,9 @@ docker container run ex-build-arg bash -c 'echo $S3_BUCKET'
 # para visualizar o mantenedor da imagem, é possivel obter informação rapidamente utilizando filtro abaixo:
 docker image inspect --format="{{index .Config.Labels \"maintainer\"}}" ex-build-arg
 ```
+
+5|39
+```sh
+    docker image build -t ex-build-copy .
+    docker container run -p 80:80 ex-build-copy
+```
