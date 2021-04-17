@@ -31,3 +31,18 @@ docker image inspect --format="{{index .Config.Labels \"maintainer\"}}" ex-build
     docker image build -t ex-build-copy .
     docker container run -p 80:80 ex-build-copy
 ```
+
+5|41 - Uso de instruções para execução do container 
+```sh
+    docker image build -t ex-build-dev .
+
+    # -v: volume
+    # -it: modo interativo
+    # -p: porta
+    docker container run -it -v $(pwd):/app -p 80:8000 --name python-server ex-build-dev
+
+    # novo container debian irá ler o log gerado no container anterior
+    docker container run -it --volumes-from=python-server debian cat /log/http-server.log
+```
+*É necesário mapear o volume para que o diretorio /app aponte para a pasta build-dev que está na máquina host*
+
