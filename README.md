@@ -103,3 +103,4 @@ docker container run -d --name container4 --net host alpine sleep 1000
 # veja o container fica mais exposto e todas as interfaces do host são compartilhadas com a maquina.
 docker container exec -it container4 ifconfig
 ```
+
