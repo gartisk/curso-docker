@@ -1,0 +1,7 @@
+docker-compose up -d
+
+docker-compose ps
+
+docker-compose exec db psql -U postgres -c '\l'
+
+docker-compose logs -f -t
