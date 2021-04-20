@@ -5,3 +5,5 @@ docker-compose ps
 docker-compose exec db psql -U postgres -c '\l'
 
 docker-compose logs -f -t
+
+docker-compose exec db psql -U postgres -d email_sender -c 'select * from emails'
