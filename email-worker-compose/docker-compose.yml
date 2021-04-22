@@ -44,7 +44,7 @@ services:
       - db
       - queue
     environment: 
-      - DB_NAME=abc_sender      # Nome errado foi adicionado propositadamente para vermos o override sobrescrever isto.
+      - DB_NAME=abc_sender      # A título de exemplo, fora adicionado um valor inválido, para que o mesmo seja sobrescrito pelo docker-compose.override.yml
   queue:
       image: redis:3.2
       networks: 
